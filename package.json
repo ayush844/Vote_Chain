@@ -8,14 +8,28 @@
     "start": "next start"
   },
   "dependencies": {
+    "@openzeppelin/contracts": "^5.4.0",
     "next": "16.0.1",
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@nomicfoundation/hardhat-ignition": "^3.0.5",
+    "@nomicfoundation/hardhat-toolbox-mocha-ethers": "^3.0.1",
     "@tailwindcss/postcss": "^4",
+    "@types/chai": "^4.3.20",
+    "@types/chai-as-promised": "^8.0.2",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^22.19.0",
     "babel-plugin-react-compiler": "1.0.0",
-    "tailwindcss": "^4"
-  }
+    "chai": "^5.3.3",
+    "ethers": "^6.15.0",
+    "forge-std": "github:foundry-rs/forge-std#v1.9.4",
+    "hardhat": "^3.0.12",
+    "mocha": "^11.7.5",
+    "tailwindcss": "^4",
+    "typescript": "~5.8.0"
+  },
+  "type": "module"
 }
