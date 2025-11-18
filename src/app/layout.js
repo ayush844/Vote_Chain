@@ -21,14 +21,14 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <VotingProvider>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <VotingProvider>
         <Navigation />
         {children}
+        </VotingProvider>
       </body>
-      </VotingProvider>
     </html>
   );
 }

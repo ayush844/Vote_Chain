@@ -3,8 +3,7 @@
 import React, { useState, useEffect, createContext } from "react";
 import Web3Modal from "web3modal";
 import { ethers } from "ethers";
-import { useRouter } from "next/navigation"; // ✅ for App Router (instead of next/router)
-import axios from "axios";
+import { useRouter } from "next/navigation";
 import { VotingAddress, VotingABI } from "./constants";
 
 export const VotingContext = createContext();
@@ -50,41 +49,40 @@ export const VotingProvider = ({ children }) => {
     setCurrentAccount(accounts[0]);
   }
 
-  // ✅ Initialize IPFS only on the client side
-  useEffect(() => {
-    const initIpfs = async () => {
-      if (typeof window !== "undefined") {
-        const { create } = await import("ipfs-http-client");
-        const client = create({
-          url: "https://ipfs.infura.io:5001/api/v0",
-        });
-        setIpfsClient(client);
-      }
-    };
-    initIpfs();
-  }, []);
-
   // ✅ Prepare contract fetcher (kept the same)
   const fetchContract = (signerOrProvider) =>
     new ethers.Contract(VotingAddress, VotingABI, signerOrProvider);
 
 
-  // upload to ipfs
+  // upload to pinata
+const uploadToIPFS = async (file) => {
+  try {
+    const formData = new FormData();
+    formData.append("file", file);
 
-   const uploadToIPFS = async (file) => {
-    try {
-      const added = await ipfsClient.add({ content: file });
+    const res = await fetch("https://api.pinata.cloud/pinning/pinFileToIPFS", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.NEXT_PUBLIC_PINATA_JWT}`,
+      },
+      body: formData,
+    });
 
-      const url = `https://ipfs.infura.io/ipfs/${added.path}`;
-      return url;
-    } catch (error) {
-      setError("Error uploading file to IPFS: ");
+    const data = await res.json();
+
+    if (data.IpfsHash) {
+      return `https://gateway.pinata.cloud/ipfs/${data.IpfsHash}`;
+    } else {
+      setError("Failed to upload to Pinata");
     }
-   }
+  } catch (err) {
+    setError("Failed to upload to Pinata: " + err.message);
+  }
+};
 
 
   return (
-    <VotingContext.Provider value={{ VotingTitle, ipfsClient, fetchContract, checkIfWalletIsConnected, connectWallet, uploadToIPFS }}>
+    <VotingContext.Provider value={{ VotingTitle, fetchContract, checkIfWalletIsConnected, connectWallet, uploadToIPFS }}>
       {children}
     </VotingContext.Provider>
   );

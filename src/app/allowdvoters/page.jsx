@@ -28,6 +28,7 @@ const AllowedVoters = () => {
 
   const onDrop = useCallback(async (acceptedFile) => {
     const url = await uploadToIPFS(acceptedFile[0]);
+    console.log("image url is >>>> ", url);
     setFileUrl(url);
   });
 
@@ -42,7 +43,7 @@ const AllowedVoters = () => {
       <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-cyan-400/20 to-blue-600/20 blur-2xl h-fit w-fit p-16" />
       <div className="relative rounded-lg border border-cyan-400/30 bg-card p-8 max-w-96 min-w-80">
         {fileUrl && (
-          <div className='flex flex-col items-center'>
+          <div className='flex flex-col items-center fixed top-48 left-12 w-60 h-fit bg-black rounded-lg p-6 border-2 border-cyan-400'>
             <img
               src={fileUrl}
               alt="voter image"
@@ -50,12 +51,12 @@ const AllowedVoters = () => {
             />
 
             {/* Text container full width so text aligns to start */}
-            <div className='w-full'>
+            <div className='w-full overflow-hidden wrap-break-word'>
               <p className='text-lg font-extrabold text-gray-400 mb-3'>
                 Name: &nbsp; <span className='text-white'>{formInput.name}</span>
               </p>
               <p className='text-lg font-extrabold text-gray-400 mb-3'>
-                Address: &nbsp; <span className='text-white'>{formInput.address.slice(0, 20)}</span>
+                Address: &nbsp; <span className='text-white'>{formInput.address.slice(0, 20)}...</span>
               </p>
               <p className='text-lg font-extrabold text-gray-400 mb-3'>
                 Position: &nbsp; <span className='text-white'>{formInput.position}</span>
