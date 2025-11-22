@@ -22,7 +22,7 @@ const AllowedVoters = () => {
   });
 
   const router = useRouter();
-  const {uploadToIPFS} = useContext(VotingContext);
+  const {uploadToIPFS, createVoter, voterArray, getAllVotersData} = useContext(VotingContext);
 
   // voter image Drop
 
@@ -35,6 +35,11 @@ const AllowedVoters = () => {
   const {getRootProps, getInputProps, isDragActive} = useDropzone(
     {onDrop, accept: { 'image/*': []}, maxSize: 5000000
   }); 
+
+  useEffect(()=>{
+    getAllVotersData();
+    console.log("voterArray in allowdvoters page >>>> ", voterArray);
+  }, [])
 
   return (
     <div className='pt-36 pb-36 w-[90%] mx-auto my-0 grid  gap-12 justify-items-center     grid-cols-1 md:grid-cols-2 lg:grid-cols-[25%_50%_25%]'>
@@ -73,19 +78,19 @@ const AllowedVoters = () => {
               <p className=' text-lg font-extrabold text-gray-400 mb-5.5'>Decentralized voting powered by Ethereum</p>
               <p className=' text-xl text-cyan-400 font-medium'>Contract Candidate</p>
             </div>
-            <div>
-              {/* {voterArray.map((el, i)=> (
-                <div key={i+1}>
-                  <div>
-                    <img src="" alt="Profile Photo" />
+            <div className='mt-8 flex flex-wrap justify-center gap-6'>
+              {voterArray.map((el, i)=> (
+                <div  key={i+1} className='flex flex-col items-center gap-4 mb-6 bg-gray-950 border border-cyan-400/20 p-4 rounded-lg max-w-52'>
+                  <div className='w-24 h-24 rounded-full overflow-hidden border-2 border-cyan-400'>
+                    <img src={el[2]} alt="Profile Photo"  className='w-full h-full' />
                   </div>
-                  <div>
-                    <p>Name</p>
-                    <p>Address</p>
-                    <p>Details</p>
+                  <div  className='text-center'>
+                    <p>{el[1]} #{Number(el[0])}</p>
+                    <p>Address: {el[3].slice(0, 10)}..</p>
+                    {/* <p>Details</p> */}
                   </div>
                 </div>
-              ))} */}
+              ))}
             </div>
           </div>
         )}
@@ -124,7 +129,7 @@ const AllowedVoters = () => {
           <Input inputType="text" title="Position" placeholder="Voter Position" handleClick={(e)=>setFormInput({...formInput, position: e.target.value})} />
 
           <div className='flex justify-end mt-8'>
-            <Button btnName="Authorize Voter" handleClick={() => {}} />
+            <Button btnName="Authorize Voter" handleClick={() => createVoter(formInput, fileUrl)} />
           </div>
         </div>
       </div>
